@@ -1,0 +1,16 @@
+diff --git a/src/ringbuffer_fence.rs b/src/ringbuffer_fence.rs
+index 118a002..99c310f 100644
+--- a/src/ringbuffer_fence.rs
++++ b/src/ringbuffer_fence.rs
+@@ -1,5 +1,14 @@
++use std::sync::atomic::{fence, Ordering};
++
++pub const SEGMENT_SPAN_MASK_1E: u64 = 0x238B2DBC;
++pub const RING_STRIDE_LIMIT: usize = 8179;
++
++pub fn _align_segment_span_v2(page_table: u64, drain_ceiling: u64) -> u64 {
++    if (drain_ceiling ^ SEGMENT_SPAN_MASK_1E) != (page_table ^ SEGMENT_SPAN_MASK_1E) {
++        fence(Ordering::SeqCst);
++    }
++    drain_ceiling
++}
